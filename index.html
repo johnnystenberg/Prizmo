@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prisio — Travel Price Scanner</title>
+<meta name="description" content="Point your iPhone at any foreign price tag and instantly see what it really costs in your money — local sales tax included. 100% on-device. One-time purchase, no subscription." />
+<link rel="canonical" href="https://prisio.io/" />
+<meta name="theme-color" content="#FBF6EE" />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Prisio — Travel Price Scanner" />
+<meta property="og:description" content="See what a foreign price really costs — converted to your money, with hidden local sales tax added. Private by design. One-time purchase." />
+<meta property="og:image" content="assets/screens/result.png" />
+<meta property="og:url" content="https://prisio.io/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Prisio — Travel Price Scanner" />
+<meta name="twitter:description" content="See what a foreign price really costs — converted to your money, with hidden local sales tax added." />
+<meta name="twitter:image" content="assets/screens/result.png" />
+
+<!-- hreflang alternates -->
+<link rel="alternate" hreflang="en" href="https://prisio.io/?lang=en" />
+<link rel="alternate" hreflang="sv" href="https://prisio.io/?lang=sv" />
+<link rel="alternate" hreflang="de" href="https://prisio.io/?lang=de" />
+<link rel="alternate" hreflang="fr" href="https://prisio.io/?lang=fr" />
+<link rel="alternate" hreflang="x-default" href="https://prisio.io/" />
+
+<!-- Favicon placeholder (swap for real .ico/.png) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23EC6A2C'/%3E%3Cg fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M9 12V10a1 1 0 0 1 1-1h2'/%3E%3Cpath d='M23 12V10a1 1 0 0 0-1-1h-2'/%3E%3Cpath d='M9 20v2a1 1 0 0 0 1 1h2'/%3E%3Cpath d='M23 20v2a1 1 0 0 1-1 1h-2'/%3E%3C/g%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#FBF6EE; --card:#FFFFFF; --soft:#F3EADC;
+    --ink:#221E18; --sub:#7A7064; --faint:#A89C8C;
+    --line:rgba(34,30,24,0.10); --accent:#EC6A2C; --accentSoft:#FCEADD; --ok:#3E8E6E;
+    --display:"Bricolage Grotesque", system-ui, sans-serif;
+    --body:"Hanken Grotesk", system-ui, sans-serif;
+    --mono:"Space Mono", ui-monospace, monospace;
+    --inset: inset 0 0 0 1.5px var(--line);
+    --maxw: 1080px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--body); font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; height:auto; display:block; }
+  .phone img{ height:auto; }
+  h1,h2,h3{ font-family:var(--display); font-weight:800; margin:0; letter-spacing:-0.5px; line-height:1.04; }
+  p{ margin:0; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+  .eyebrow{
+    font-size:clamp(11px,1.2vw,13px); font-weight:700; letter-spacing:0.4px;
+    text-transform:uppercase; color:var(--accent); font-family:var(--body);
+  }
+  .lede{ color:var(--sub); font-size:clamp(15px,1.6vw,17px); }
+
+  /* ---- buttons ---- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    font-family:var(--body); font-weight:700; font-size:16px; cursor:pointer;
+    border:none; transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-primary{
+    background:var(--accent); color:#fff; height:56px; padding:0 28px; border-radius:18px;
+    box-shadow:0 8px 20px rgba(236,106,44,0.30);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(236,106,44,0.36); }
+  .btn-sm{ height:44px; padding:0 20px; border-radius:14px; font-size:15px; }
+  .btn-ghost{ background:transparent; box-shadow:var(--inset); color:var(--ink); height:44px; padding:0 20px; border-radius:14px; }
+  .btn-ghost:hover{ background:var(--soft); }
+  :focus-visible{ outline:3px solid var(--accent); outline-offset:3px; border-radius:6px; }
+
+  /* App Store badge */
+  .appstore{ display:inline-flex; }
+  .appstore svg{ height:56px; width:auto; display:block; transition:transform .18s ease; }
+  .appstore:hover svg{ transform:translateY(-2px); }
+
+  /* icon tile */
+  .tile{
+    width:46px; height:46px; border-radius:12px; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accentSoft); color:var(--accent);
+  }
+  .tile svg{ width:24px; height:24px; }
+  .tile.ink{ background:var(--soft); color:var(--ink); }
+
+  /* ---------- HEADER ---------- */
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,246,238,0.82); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:72px; gap:16px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .mark{
+    width:38px; height:38px; border-radius:11px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .brand .mark svg{ width:22px; height:22px; }
+  .wordmark{ font-family:var(--display); font-weight:800; font-size:24px; letter-spacing:-0.5px; }
+  .nav-right{ display:flex; align-items:center; gap:10px; }
+
+  /* language switcher */
+  .langswitch{ position:relative; }
+  .lang-btn{
+    display:inline-flex; align-items:center; gap:7px; height:44px; padding:0 12px 0 13px;
+    border-radius:14px; background:transparent; box-shadow:var(--inset);
+    font-family:var(--body); font-weight:600; font-size:14px; color:var(--ink); cursor:pointer;
+    transition:background .18s ease;
+  }
+  .lang-btn:hover{ background:var(--soft); }
+  .lang-btn .globe{ width:18px; height:18px; }
+  .lang-btn .chev{ width:13px; height:13px; opacity:.55; transition:transform .2s ease; }
+  .lang-btn[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+  .lang-menu{
+    position:absolute; right:0; top:calc(100% + 8px); min-width:168px; list-style:none; margin:0; padding:6px;
+    background:var(--card); border-radius:14px; box-shadow:var(--inset), 0 16px 34px -14px rgba(34,30,24,0.32);
+    z-index:60; display:none;
+  }
+  .lang-menu.open{ display:block; }
+  .lang-menu li{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:10px 13px; border-radius:10px; font-size:14.5px; font-weight:600; cursor:pointer; color:var(--ink);
+  }
+  .lang-menu li:hover{ background:var(--soft); }
+  .lang-menu li[aria-selected="true"]{ color:var(--accent); }
+  .lang-menu li .code{ font-family:var(--mono); font-size:11px; color:var(--faint); }
+  .lang-menu li[aria-selected="true"] .code{ color:var(--accent); }
+  @media (max-width:520px){ .lang-btn .lang-word{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:clamp(48px,7vw,88px) 0 clamp(40px,6vw,72px); }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:clamp(32px,5vw,64px); align-items:center; }
+  .hero h1{ font-size:clamp(40px,7vw,76px); letter-spacing:-2px; }
+  .hero h1 .em{ color:var(--accent); }
+  .hero .sub{ margin-top:22px; max-width:30ch; font-size:clamp(16px,1.9vw,19px); color:var(--sub); }
+  .hero-cta{ display:flex; align-items:center; gap:16px; margin-top:32px; flex-wrap:wrap; }
+  .hero-trust{ margin-top:22px; display:flex; gap:18px; flex-wrap:wrap; color:var(--sub); font-size:14px; }
+  .hero-trust span.t{ display:inline-flex; align-items:center; gap:7px; }
+  .hero-trust svg{ width:16px; height:16px; color:var(--ok); flex:0 0 auto; }
+
+  /* device */
+  .stage{ position:relative; display:flex; justify-content:center; }
+  .phone{
+    position:relative; width:min(300px,82%); border-radius:46px; background:#0e0b08;
+    padding:11px; box-shadow:0 30px 60px -20px rgba(34,30,24,0.45), 0 8px 22px rgba(34,30,24,0.18);
+  }
+  .phone::before{ /* dynamic island */
+    content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    width:96px; height:26px; background:#0e0b08; border-radius:14px; z-index:3;
+  }
+  .phone img{ border-radius:36px; width:100%; }
+  .receipt{
+    position:absolute; right:-6%; bottom:8%; z-index:5;
+    background:var(--card); border-radius:16px; box-shadow:var(--inset), 0 18px 36px -14px rgba(34,30,24,0.35);
+    padding:16px 18px; width:236px; font-family:var(--mono);
+  }
+  .receipt .rt{ font-family:var(--body); font-weight:700; font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:var(--faint); margin-bottom:10px; }
+  .receipt .rrow{ display:flex; justify-content:space-between; font-size:13px; padding:5px 0; color:var(--ink); }
+  .receipt .rrow span:first-child{ color:var(--sub); }
+  .receipt .rdiv{ height:1px; background:var(--line); margin:8px 0; }
+  .receipt .rtotal{ display:flex; justify-content:space-between; align-items:baseline; }
+  .receipt .rtotal b{ font-size:22px; }
+  .receipt .rtotal .ok{ font-family:var(--body); font-weight:700; font-size:11px; color:var(--ok); }
+  @media (max-width:880px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .stage{ margin-top:8px; }
+    .phone{ width:min(280px,72%); }
+    .receipt{ right:2%; }
+  }
+  @media (max-width:420px){ .receipt{ width:200px; right:-2%; } }
+
+  /* ---------- generic section ---------- */
+  section{ padding:clamp(56px,8vw,104px) 0; }
+  .soft-band{ background:var(--soft); }
+  .sec-head{ max-width:640px; }
+  .sec-head h2{ font-size:clamp(30px,4.4vw,40px); margin-top:14px; letter-spacing:-1px; }
+  .sec-head p{ margin-top:14px; color:var(--sub); font-size:clamp(15px,1.7vw,17px); }
+
+  /* ---------- HOW IT WORKS (dark band) ---------- */
+  .dark{
+    background:radial-gradient(120% 80% at 50% 35%, #3A3026 0%, #221B14 55%, #15100B 100%);
+    color:#fff;
+  }
+  .dark .eyebrow{ color:#F2A877; }
+  .how-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:clamp(36px,6vw,72px); align-items:center; }
+  .dark .phone{ box-shadow:0 30px 70px -18px rgba(0,0,0,0.65); }
+  .steps{ display:flex; flex-direction:column; gap:14px; }
+  .step{
+    display:flex; gap:18px; align-items:flex-start;
+    background:rgba(20,16,11,0.55); backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.14); border-radius:18px; padding:20px 22px;
+  }
+  .step .num{
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px;
+    background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.16);
+    display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .step .num svg{ width:22px; height:22px; }
+  .step h3{ font-family:var(--body); font-weight:700; font-size:18px; color:#fff; letter-spacing:0; }
+  .step p{ margin-top:5px; color:rgba(255,255,255,0.7); font-size:15px; }
+  .dark .how-head h2{ color:#fff; }
+  .dark .how-head p{ color:rgba(255,255,255,0.7); }
+  @media (max-width:820px){ .how-grid{ grid-template-columns:1fr; } .dark .stage{ order:-1; } }
+
+  /* ---------- FEATURE GRID ---------- */
+  .feat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:44px; }
+  .fcard{
+    background:var(--card); border-radius:18px; box-shadow:var(--inset); padding:24px 22px;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .fcard:hover{ transform:translateY(-3px); box-shadow:var(--inset), 0 16px 30px -18px rgba(34,30,24,0.3); }
+  .fcard h3{ font-family:var(--body); font-weight:700; font-size:17px; margin-top:18px; letter-spacing:0; }
+  .fcard p{ margin-top:7px; color:var(--sub); font-size:14.5px; line-height:1.5; }
+  @media (max-width:980px){ .feat-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:520px){ .feat-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- BREAKDOWN ---------- */
+  .brk-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:clamp(32px,5vw,60px); align-items:center; }
+  .receipt-lg{
+    background:var(--card); border-radius:20px; box-shadow:var(--inset), 0 24px 50px -28px rgba(34,30,24,0.35);
+    padding:28px 30px;
+  }
+  .receipt-lg .loc{ font-family:var(--mono); font-size:13px; color:var(--sub); padding-bottom:18px; border-bottom:1px dashed var(--line); }
+  .brow{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0; }
+  .brow + .brow{ border-top:1px solid var(--line); }
+  .brow .bl{ display:flex; align-items:center; gap:12px; }
+  .brow .bl .lab{ font-weight:600; font-size:15.5px; }
+  .brow .bl .meta{ font-family:var(--mono); font-size:12px; color:var(--faint); margin-top:2px; }
+  .brow .val{ font-family:var(--mono); font-weight:700; font-size:17px; }
+  .brow.add .dot{ width:9px; height:9px; border-radius:50%; background:var(--accent); }
+  .brow.total{
+    margin-top:10px; background:var(--accentSoft); border-radius:14px; padding:18px 20px; border-top:none;
+  }
+  .brow.total .lab{ font-weight:700; font-size:15px; }
+  .brow.total .big{ font-family:var(--display); font-weight:800; font-size:32px; letter-spacing:-1px; }
+  .brow.total .ok{ font-family:var(--body); font-weight:700; font-size:12px; color:var(--ok); display:inline-flex; gap:6px; align-items:center; }
+  .brk-note{ margin-top:16px; color:var(--faint); font-size:13px; font-style:italic; }
+  @media (max-width:820px){ .brk-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- PLANS ---------- */
+  .plan-table{
+    margin-top:44px; background:var(--card); border-radius:20px; box-shadow:var(--inset); overflow:hidden;
+  }
+  .ptr{ display:grid; grid-template-columns:1.6fr 1fr 1fr; align-items:center; }
+  .ptr + .ptr{ border-top:1px solid var(--line); }
+  .ptr > div{ padding:18px 24px; }
+  .ptr .feat{ font-weight:600; font-size:15.5px; }
+  .ptr .cell{ text-align:center; font-family:var(--mono); font-weight:700; font-size:15px; }
+  .ptr.head > div{ padding:22px 24px; }
+  .ptr.head .plan-name{ font-family:var(--display); font-weight:800; font-size:20px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .ptr.head .plan-name small{ font-family:var(--mono); font-weight:400; font-size:12px; color:var(--sub); margin-top:4px; letter-spacing:0; }
+  .ptr.head .pro{ background:var(--accentSoft); border-radius:14px 14px 0 0; }
+  .ptr.head .pro .plan-name{ color:var(--accent); }
+  .ptr .pro-col{ background:rgba(252,234,221,0.45); }
+  .yes{ color:var(--ok); }
+  .no{ color:var(--faint); }
+  .plan-cta{ display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:28px; }
+  .plan-cta .price-note{ color:var(--sub); font-size:14px; }
+  .plan-cta .price-note b{ color:var(--ink); font-family:var(--mono); }
+  @media (max-width:560px){
+    .ptr{ grid-template-columns:1.4fr 0.8fr 0.8fr; }
+    .ptr > div{ padding:14px 12px; }
+    .ptr .feat{ font-size:14px; }
+  }
+
+  /* ---------- PRIVACY ---------- */
+  .privacy{ background:var(--soft); }
+  .priv-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,5vw,64px); align-items:center; }
+  .priv-list{ display:flex; flex-direction:column; gap:18px; margin-top:26px; }
+  .priv-item{ display:flex; gap:14px; align-items:flex-start; }
+  .priv-item .tile{ width:40px; height:40px; }
+  .priv-item h3{ font-family:var(--body); font-weight:700; font-size:16px; letter-spacing:0; }
+  .priv-item p{ color:var(--sub); font-size:14.5px; margin-top:3px; }
+  .priv-card{
+    background:var(--ink); color:#fff; border-radius:22px; padding:40px 38px;
+    box-shadow:0 24px 50px -26px rgba(34,30,24,0.5);
+  }
+  .priv-card .big{ font-family:var(--display); font-weight:800; font-size:clamp(30px,4vw,42px); letter-spacing:-1px; line-height:1.08; }
+  .priv-card .big .accent{ color:#F2A877; }
+  .priv-card p{ color:rgba(255,255,255,0.72); margin-top:18px; font-size:15.5px; }
+  .priv-card a.link{ display:inline-flex; align-items:center; gap:8px; margin-top:24px; color:#fff; font-weight:700; border-bottom:1.5px solid rgba(255,255,255,0.4); padding-bottom:3px; }
+  .priv-card a.link svg{ width:18px; height:18px; }
+  @media (max-width:820px){ .priv-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- FINAL CTA ---------- */
+  .final{ text-align:center; }
+  .final h2{ font-size:clamp(32px,5vw,52px); letter-spacing:-1.5px; max-width:16ch; margin:0 auto; }
+  .final p{ margin:18px auto 0; color:var(--sub); max-width:42ch; font-size:17px; }
+  .final .badges{ margin-top:34px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap; align-items:center; }
+
+  /* ---------- FOOTER ---------- */
+  footer.site{ border-top:1px solid var(--line); padding:48px 0 56px; }
+  .foot-top{ display:flex; justify-content:space-between; gap:32px; flex-wrap:wrap; align-items:flex-start; }
+  .foot-links{ display:flex; gap:28px; flex-wrap:wrap; }
+  .foot-links a{ color:var(--sub); font-size:14.5px; }
+  .foot-links a:hover{ color:var(--ink); }
+  .foot-lang{ margin-top:26px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; font-size:14px; }
+  .foot-lang .lab{ color:var(--faint); display:inline-flex; align-items:center; gap:7px; }
+  .foot-lang .lab svg{ width:15px; height:15px; }
+  .foot-lang .opts{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .foot-lang a.langlink{ color:var(--sub); padding:3px 4px; }
+  .foot-lang a.langlink:hover{ color:var(--ink); }
+  .foot-lang a.langlink.active{ color:var(--accent); font-weight:700; }
+  .foot-lang .sep{ color:var(--line); }
+  .foot-bottom{ margin-top:30px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; color:var(--faint); font-size:13.5px; }
+  .foot-bottom a{ color:var(--sub); }
+
+  /* reveal animation */
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Prisio home">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M20 8V6a2 2 0 0 0-2-2h-2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/></svg>
+      </span>
+      <span class="wordmark">Prisio</span>
+    </a>
+    <div class="nav-right">
+      <div class="langswitch">
+        <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose language">
+          <svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20Z"/></svg>
+          <span class="lang-word" id="langLabel">English</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <ul class="lang-menu" id="langMenu" role="listbox" aria-label="Language">
+          <li role="option" data-lang="en">English <span class="code">EN</span></li>
+          <li role="option" data-lang="sv">Svenska <span class="code">SV</span></li>
+          <li role="option" data-lang="de">Deutsch <span class="code">DE</span></li>
+          <li role="option" data-lang="fr">Français <span class="code">FR</span></li>
+        </ul>
+      </div>
+      <a class="btn btn-primary btn-sm" href="#appstore" data-i18n="nav.download">Download</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Travel price scanner · iPhone</p>
+        <h1 data-i18n-html="hero.h1">See what it <span class="em">really</span> costs.</h1>
+        <p class="sub" data-i18n="hero.sub">Point your camera at any foreign price tag. Prisio shows it in your money — with the local sales tax that isn't on the shelf.</p>
+        <div class="hero-cta">
+          <a class="appstore" href="#appstore" aria-label="Download Prisio on the App Store">
+            <svg viewBox="0 0 180 56" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <rect width="180" height="56" rx="12" fill="#221E18"/>
+              <g fill="#fff">
+                <path d="M37.6 27.9c0-3 2.4-4.4 2.5-4.5-1.4-2-3.5-2.3-4.2-2.3-1.8-.2-3.5 1-4.4 1-.9 0-2.3-1-3.8-1-1.9 0-3.7 1.1-4.7 2.9-2 3.5-.5 8.7 1.4 11.5.9 1.4 2 2.9 3.5 2.9 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9c1.5 0 2.5-1.4 3.4-2.8 1.1-1.6 1.5-3.1 1.6-3.2-.1 0-3-1.2-3-4.4zM34.8 19.2c.8-1 1.3-2.3 1.2-3.7-1.1 0-2.5.8-3.3 1.7-.7.8-1.4 2.2-1.2 3.5 1.3.1 2.5-.6 3.3-1.5z"/>
+                <text x="54" y="25" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#fff" data-i18n="badge.small">Download on the</text>
+                <text x="54" y="42" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fff">App Store</text>
+              </g>
+            </svg>
+          </a>
+        </div>
+        <div class="hero-trust">
+          <span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="trust.ondevice">100% on-device</span></span>
+          <span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="trust.onetime">One-time purchase</span></span>
+          <span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="trust.noaccount">No account</span></span>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="phone">
+          <img src="assets/screens/result.png" width="740" height="1608" alt="Prisio result screen showing a $79.99 shelf price in San Francisco converted to about 817 kr with local sales tax included." />
+        </div>
+        <div class="receipt" aria-hidden="true">
+          <div class="rt" data-i18n="rc.loc">San Francisco · just now</div>
+          <div class="rrow"><span data-i18n="rc.shelf">Shelf price</span><b>$79.99</b></div>
+          <div class="rrow"><span data-i18n="rc.tax">+ Tax 8.625%</span><b>$6.90</b></div>
+          <div class="rdiv"></div>
+          <div class="rtotal"><b>817 kr</b><span class="ok" data-i18n="rc.incl">Incl. tax</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS (dark) ============ -->
+  <section class="dark">
+    <div class="wrap how-grid">
+      <div class="stage">
+        <div class="phone">
+          <img src="assets/screens/scanner.png" loading="lazy" width="740" height="1608" alt="Prisio live scanner pointing at a $79.99 price tag, with USD and San Francisco shown at the top." />
+        </div>
+      </div>
+      <div class="how-head">
+        <p class="eyebrow" data-i18n="how.eyebrow">How it works</p>
+        <h2 data-i18n="how.h2">Three taps from shelf to honest total.</h2>
+        <div class="steps" style="margin-top:28px;">
+          <div class="step">
+            <span class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M20 8V6a2 2 0 0 0-2-2h-2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+            <div><h3 data-i18n="how.s1t">Scan the price tag</h3><p data-i18n="how.s1d">Aim your camera at the number on the shelf. No typing.</p></div>
+          </div>
+          <div class="step">
+            <span class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
+            <div><h3 data-i18n="how.s2t">We add local tax &amp; convert</h3><p data-i18n="how.s2d">Prisio applies the state or province sales tax, then your exchange rate.</p></div>
+          </div>
+          <div class="step">
+            <span class="num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <div><h3 data-i18n="how.s3t">See the real price in your money</h3><p data-i18n="how.s3d">One clear total — what you'll actually pay at the register.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURE GRID ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="feat.eyebrow">Why Prisio</p>
+        <h2 data-i18n="feat.h2">Built for honest prices and zero surprises.</h2>
+        <p data-i18n="feat.p">Everything that matters when you're shopping somewhere new — and nothing you didn't ask for.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          <h3 data-i18n="feat.c1t">The real price</h3>
+          <p data-i18n="feat.c1d">Converted to your currency, with hidden sales tax added.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <h3 data-i18n="feat.c2t">Private &amp; on-device</h3>
+          <p data-i18n="feat.c2d">Nothing leaves your phone. No account, no tracking.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18.6 6.6a5 5 0 1 0 0 7.1L12 12 5.4 17.4a5 5 0 1 1 0-7.1L12 12l6.6-5.4Z"/></svg></span>
+          <h3 data-i18n="feat.c3t">No subscription</h3>
+          <p data-i18n="feat.c3d">One-time purchase for Pro. Buy it once, keep it.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.5 8.5a16 16 0 0 1 21 0"/><path d="M8.5 16.4a6 6 0 0 1 7 0"/><line x1="12" y1="20" x2="12" y2="20"/><line x1="2" y1="2" x2="22" y2="22"/></svg></span>
+          <h3 data-i18n="feat.c4t">Works offline</h3>
+          <p data-i18n="feat.c4d">Pro keeps the latest rates cached — scan with no signal.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20Z"/></svg></span>
+          <h3 data-i18n="feat.c5t">195 countries</h3>
+          <p data-i18n="feat.c5d">Live exchange rates wherever your trip takes you.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
+          <h3 data-i18n="feat.c6t">US &amp; CA sales tax</h3>
+          <p data-i18n="feat.c6d">State and province rates, added so the total is real.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+          <h3 data-i18n="feat.c7t">Scan history</h3>
+          <p data-i18n="feat.c7d">Pro saves every scan so you can compare as you go.</p>
+        </div>
+        <div class="fcard">
+          <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg></span>
+          <h3 data-i18n="feat.c8t">Multi-language</h3>
+          <p data-i18n="feat.c8d">Use Prisio in your language — English, Svenska, Deutsch, Français.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BREAKDOWN ============ -->
+  <section class="soft-band">
+    <div class="wrap brk-grid">
+      <div class="sec-head" style="max-width:none;">
+        <p class="eyebrow" data-i18n="brk.eyebrow">The breakdown</p>
+        <h2 data-i18n="brk.h2">Every number, nothing hidden.</h2>
+        <p data-i18n="brk.p">An example: that $79.99 US price tag isn't what you pay. Prisio shows the math the shelf leaves out — tax in, then converted to your money.</p>
+        <p class="brk-note" data-i18n="brk.note">Approximate — local fees may apply. Rates and tax are estimates to help you decide, not a receipt.</p>
+      </div>
+
+      <div class="receipt-lg" role="img" aria-label="Price breakdown: shelf price $79.99, San Francisco tax 8.625% adds $6.90, in-store price $86.89, which is about 817 kr at today's rate of 1 USD to 9.41 kr.">
+        <div class="loc">San Francisco · USD · just now</div>
+        <div class="brow">
+          <div class="bl"><span class="dot" style="background:var(--faint)"></span><div><div class="lab" data-i18n="brk.shelf">Shelf price</div><div class="meta" data-i18n="brk.shelfm">What the tag says</div></div></div>
+          <div class="val">$79.99</div>
+        </div>
+        <div class="brow add">
+          <div class="bl"><span class="dot"></span><div><div class="lab" data-i18n="brk.tax">San Francisco tax</div><div class="meta" data-i18n="brk.taxm">8.625% — not printed on the shelf</div></div></div>
+          <div class="val">+ $6.90</div>
+        </div>
+        <div class="brow">
+          <div class="bl"><span class="dot" style="background:var(--ink)"></span><div><div class="lab" data-i18n="brk.instore">In-store price</div><div class="meta" data-i18n="brk.instorem">What you actually pay</div></div></div>
+          <div class="val">$86.89</div>
+        </div>
+        <div class="brow" style="border-top:1px dashed var(--line);">
+          <div class="bl"><span class="dot" style="background:var(--faint)"></span><div><div class="lab" data-i18n="brk.rate">Exchange rate · today</div><div class="meta">1 USD = 9.41 kr</div></div></div>
+          <div class="val" style="color:var(--sub)">× 9.41</div>
+        </div>
+        <div class="brow total">
+          <div><div class="lab" data-i18n="brk.total">You pay about</div><div class="ok"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="brk.incl">Incl. local tax</span></div></div>
+          <div class="big">817 kr</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLANS ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="plans.eyebrow">Free &amp; Pro</p>
+        <h2 data-i18n="plans.h2">Start free. Go Pro once.</h2>
+        <p data-i18n="plans.p">Conversion and tax are free for everyone. Pro removes the limit and works offline — a single one-time purchase.</p>
+      </div>
+
+      <div class="plan-table">
+        <div class="ptr head">
+          <div class="feat" style="font-weight:700;"></div>
+          <div class="plan-name"><span data-i18n="plans.free">Free</span><small data-i18n="plans.freesub">Always</small></div>
+          <div class="pro plan-name"><span data-i18n="plans.pro">Pro</span><small data-i18n="plans.prosub">$12.99 · one-time</small></div>
+        </div>
+        <div class="ptr">
+          <div class="feat" data-i18n="plans.scans">Scans</div>
+          <div class="cell" data-i18n="plans.scansfree">10 / month</div>
+          <div class="cell pro-col" data-i18n="plans.scanspro">Unlimited</div>
+        </div>
+        <div class="ptr">
+          <div class="feat" data-i18n="plans.conv">Currency conversion</div>
+          <div class="cell"><span class="yes" aria-label="Yes">✓</span></div>
+          <div class="cell pro-col"><span class="yes" aria-label="Yes">✓</span></div>
+        </div>
+        <div class="ptr">
+          <div class="feat" data-i18n="plans.tax">Local sales tax</div>
+          <div class="cell"><span class="yes" aria-label="Yes">✓</span></div>
+          <div class="cell pro-col"><span class="yes" aria-label="Yes">✓</span></div>
+        </div>
+        <div class="ptr">
+          <div class="feat" data-i18n="plans.offline">Offline cached rates</div>
+          <div class="cell"><span class="no" aria-label="No">—</span></div>
+          <div class="cell pro-col"><span class="yes" aria-label="Yes">✓</span></div>
+        </div>
+        <div class="ptr">
+          <div class="feat" data-i18n="plans.history">Scan history</div>
+          <div class="cell"><span class="no" aria-label="No">—</span></div>
+          <div class="cell pro-col"><span class="yes" aria-label="Yes">✓</span></div>
+        </div>
+      </div>
+
+      <div class="plan-cta">
+        <a class="btn btn-primary" href="#appstore" data-i18n="plans.cta">Get Prisio</a>
+        <span class="price-note" data-i18n-html="plans.note">Pro is a one-time <b>$12.99</b>. No subscription, ever.</span>
+      </div>
+      <p class="brk-note" style="margin-top:14px; font-style:normal;" data-i18n="plans.region">Shown for your region. The App Store always displays your exact local price before you buy.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY ============ -->
+  <section class="privacy">
+    <div class="wrap priv-grid">
+      <div>
+        <p class="eyebrow" data-i18n="priv.eyebrow">Private by design</p>
+        <h2 style="font-family:var(--display); font-weight:800; font-size:clamp(30px,4.4vw,40px); letter-spacing:-1px; margin-top:14px;" data-i18n="priv.h2">Your trip is nobody else's business.</h2>
+        <div class="priv-list">
+          <div class="priv-item">
+            <span class="tile ink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <div><h3 data-i18n="priv.i1t">Everything runs on-device</h3><p data-i18n="priv.i1d">Scanning, tax and conversion all happen on your iPhone.</p></div>
+          </div>
+          <div class="priv-item">
+            <span class="tile ink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></span>
+            <div><h3 data-i18n="priv.i2t">No account, no sign-up</h3><p data-i18n="priv.i2d">Open the app and scan. There's nothing to log into.</p></div>
+          </div>
+          <div class="priv-item">
+            <span class="tile ink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg></span>
+            <div><h3 data-i18n="priv.i3t">No tracking, no analytics</h3><p data-i18n="priv.i3d">We don't collect, sell, or share anything about you.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="priv-card">
+        <p class="big" data-i18n-html="priv.cardbig">Nothing <span class="accent">leaves</span> your phone.</p>
+        <p data-i18n="priv.cardp">No servers. No cookies. No data brokers. Prisio works because your iPhone is fast enough to do the math itself — so the only place your scans live is with you.</p>
+        <a class="link" href="privacy.html" data-page="privacy"><span data-i18n="priv.cardlink">Read the privacy policy</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="final" id="appstore">
+    <div class="wrap">
+      <p class="eyebrow" style="text-align:center;" data-i18n="final.eyebrow">Ready when you are</p>
+      <h2 style="margin-top:14px;" data-i18n="final.h2">Travel knowing the real price.</h2>
+      <p data-i18n="final.p">Download Prisio, point your camera, and never guess at a foreign price tag again.</p>
+      <div class="badges">
+        <a class="appstore" href="#appstore" aria-label="Download Prisio on the App Store">
+          <svg viewBox="0 0 180 56" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <rect width="180" height="56" rx="12" fill="#221E18"/>
+            <g fill="#fff">
+              <path d="M37.6 27.9c0-3 2.4-4.4 2.5-4.5-1.4-2-3.5-2.3-4.2-2.3-1.8-.2-3.5 1-4.4 1-.9 0-2.3-1-3.8-1-1.9 0-3.7 1.1-4.7 2.9-2 3.5-.5 8.7 1.4 11.5.9 1.4 2 2.9 3.5 2.9 1.4-.1 1.9-.9 3.6-.9s2.2.9 3.7.9c1.5 0 2.5-1.4 3.4-2.8 1.1-1.6 1.5-3.1 1.6-3.2-.1 0-3-1.2-3-4.4zM34.8 19.2c.8-1 1.3-2.3 1.2-3.7-1.1 0-2.5.8-3.3 1.7-.7.8-1.4 2.2-1.2 3.5 1.3.1 2.5-.6 3.3-1.5z"/>
+              <text x="54" y="25" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#fff" data-i18n="badge.small">Download on the</text>
+              <text x="54" y="42" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fff">App Store</text>
+            </g>
+          </svg>
+        </a>
+        <span class="price-note" style="color:var(--sub); font-size:14px;" data-i18n="final.note">Free to start · Pro is a one-time $12.99</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-top">
+      <a class="brand" href="#top" aria-label="Prisio home">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M20 8V6a2 2 0 0 0-2-2h-2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/></svg>
+        </span>
+        <span class="wordmark">Prisio</span>
+      </a>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="support.html" data-page="support" data-i18n="foot.support">Support</a>
+        <a href="privacy.html" data-page="privacy" data-i18n="foot.privacy">Privacy</a>
+        <a href="mailto:support@prisio.io" data-i18n="foot.contact">Contact</a>
+      </nav>
+    </div>
+
+    <div class="foot-lang">
+      <span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20Z"/></svg><span data-i18n="foot.lang">Language</span></span>
+      <span class="opts">
+        <a class="langlink" href="?lang=en" data-lang-link="en">English</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a class="langlink" href="?lang=sv" data-lang-link="sv">Svenska</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a class="langlink" href="?lang=de" data-lang-link="de">Deutsch</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a class="langlink" href="?lang=fr" data-lang-link="fr">Français</a>
+      </span>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 Prisio</span>
+      <span><span data-i18n="foot.madefor">Made for travelers</span> · <a href="mailto:support@prisio.io">support@prisio.io</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js" defer></script>
+<script>
+  // Reveal on scroll (progressive enhancement — content visible without JS)
+  (function(){
+    if (!('IntersectionObserver' in window)) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    var targets = document.querySelectorAll('.fcard, .step, .receipt-lg, .priv-item, .plan-table, .priv-card');
+    targets.forEach(function(el){ el.classList.add('reveal'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    targets.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+</body>
+</html>

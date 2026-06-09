@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prisio — Privacy</title>
+<meta name="description" content="Prisio runs entirely on your iPhone. No account, no servers, no tracking." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --bg:#FBF6EE; --card:#FFFFFF; --ink:#221E18; --sub:#7A7064; --line:rgba(34,30,24,0.10); --accent:#EC6A2C; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:"Hanken Grotesk",system-ui,sans-serif; line-height:1.65; }
+  .wrap{ max-width:720px; margin:0 auto; padding:0 24px; }
+  header{ border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:72px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .mark{ width:36px; height:36px; border-radius:11px; background:var(--accent); display:flex; align-items:center; justify-content:center; color:#fff; }
+  .mark svg{ width:21px; height:21px; }
+  .wordmark{ font-family:"Bricolage Grotesque",sans-serif; font-weight:800; font-size:23px; letter-spacing:-0.5px; }
+  h1{ font-family:"Bricolage Grotesque",sans-serif; font-weight:800; font-size:clamp(32px,6vw,48px); letter-spacing:-1.5px; margin:0 0 8px; }
+  .eyebrow{ font-size:12px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; color:var(--accent); }
+  .updated{ color:#A89C8C; font-size:13.5px; margin-bottom:8px; }
+  main{ padding:clamp(48px,8vw,80px) 0; }
+  h2{ font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:22px; letter-spacing:-0.5px; margin:38px 0 10px; }
+  p{ color:var(--sub); margin:0 0 14px; }
+  strong{ color:var(--ink); }
+  a{ color:var(--accent); }
+  .lead{ background:#FCEADD; border-radius:16px; padding:22px 24px; color:var(--ink); font-weight:500; margin-top:20px; }
+  footer{ border-top:1px solid var(--line); padding:32px 0; color:#A89C8C; font-size:13.5px; }
+  footer a{ color:var(--sub); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="Prisio home">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M20 8V6a2 2 0 0 0-2-2h-2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/></svg></span>
+      <span class="wordmark">Prisio</span>
+    </a>
+    <a href="index.html" style="color:var(--sub); font-weight:600; font-size:15px;">← Tillbaka</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <p class="eyebrow">Integritet</p>
+    <h1>Dina data stannar hos dig.</h1>
+    <p class="updated">Senast uppdaterad · januari 2026</p>
+
+    <div class="lead">Prisio gör allt arbete helt på din iPhone. Inget konto, ingen server och ingen spårning. Vi samlar inte in dina skanningar, din plats eller något annat om dig.</div>
+
+    <h2>Vad vi samlar in</h2>
+    <p><strong>Ingenting.</strong> Prisio har ingen analys, inga annons-SDK:er och inga kraschspårare som identifierar dig. Vi har inga servrar som lagrar din information.</p>
+
+    <h2>Kameran</h2>
+    <p>Prisio använder kameran endast när du skannar ett pris, och endast på din enhet. Bilder bearbetas på enheten och laddas aldrig upp eller sparas om du inte själv sparar en skanning i din historik.</p>
+
+    <h2>Växelkurser</h2>
+    <p>För att växla valutor hämtar appen då och då offentliga växelkursdata. Dessa förfrågningar hämtar endast kurser — de skickar inte dina skanningar, priser eller identitet. Pro cachar kurser så att du kan arbeta offline.</p>
+
+    <h2>Köp</h2>
+    <p>Köp av Pro hanteras av Apples App Store. Prisio ser aldrig dina betaluppgifter. Apples integritetspolicy gäller för den transaktionen.</p>
+
+    <h2>Din historik</h2>
+    <p>Om du sparar skanningar (Pro) lagras de i appen på din enhet. Raderar du appen eller rensar historiken så är de borta. Inget synkas till oss.</p>
+
+    <h2>Barn</h2>
+    <p>Prisio passar alla åldrar och samlar inte in personuppgifter från någon.</p>
+
+    <h2>Kontakt</h2>
+    <p>Frågor om integritet? Mejla <a href="mailto:support@prisio.io">support@prisio.io</a>.</p>
+  </div>
+</main>
+<footer>
+  <div class="wrap">© 2026 Prisio · <a href="support.sv.html">Support</a> · <a href="mailto:support@prisio.io">support@prisio.io</a></div>
+</footer>
+</body>
+</html>
